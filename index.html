@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quote Machine</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 50px; background: #f4f4f4; }
+        .box { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; background: #232f3e; color: white; border: none; border-radius: 5px; }
+        button:hover { background: #37475a; }
+        ul { text-align: left; display: inline-block; }
+    </style>
+</head>
+<body>
+
+    <h1>My Cloud Quote App</h1>
+
+    <div class="box">
+        <h2>Random Quote</h2>
+        <p id="random-display">Click the button to get inspired!</p>
+        <button onclick="fetchRandom()">Get random quote</button>
+    </div>
+
+    <div class="box">
+        <h2>All Quotes</h2>
+        <ul id="all-display"></ul>
+        <br>
+        <button onclick="fetchAll()">Get all quotes</button>
+    </div>
+
+    <script>
+        // REPLACE THIS URL with your API Gateway "Invoke URL"
+        const API_BASE_URL = "https://your-api-gateway-url.execute-api.your-region.amazonaws.com"
+
+        async function fetchRandom() {
+            const response = await fetch(`${API_BASE_URL}/random`);
+            const data = await response.json();
+            document.getElementById('random-display').innerText = data.quote;
+        }
+
+        async function fetchAll() {
+            const response = await fetch(`${API_BASE_URL}/quotes`);
+            const data = await response.json();
+            const list = document.getElementById('all-display');
+            list.innerHTML = ""; // Clear old list
+            data.quotes.forEach(q => {
+                let li = document.createElement('li');
+                li.innerText = q;
+                list.appendChild(li);
+            });
+        }
+    </script>
+</body>
+</html>
+
